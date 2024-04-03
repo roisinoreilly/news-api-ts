@@ -1,4 +1,4 @@
-module.exports = [
+export const topicData = [
   {
     description: 'The man, the Mitch, the legend',
     slug: 'mitch'

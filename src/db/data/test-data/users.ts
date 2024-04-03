@@ -1,4 +1,4 @@
-module.exports = [
+export const userData = [
   {
     username: 'butter_bridge',
     name: 'jonny',
