@@ -15,7 +15,6 @@ describe("GET /", () => {
         .get("/")
         .expect(200)
         .then((res) => {
-            console.log(endpoints)
             const expectedLength = endpoints.length;
             expect(res.body.endpoints).to.have.lengthOf(expectedLength)
             res.body.endpoints.forEach(endpoint => {
