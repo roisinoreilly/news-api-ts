@@ -17,7 +17,7 @@ describe("GET /", () => {
         .then((res) => {
             const expectedLength = endpoints.length;
             expect(res.body.endpoints).to.have.lengthOf(expectedLength)
-            res.body.endpoints.forEach(endpoint => {
+            res.body.endpoints.forEach((endpoint: {}) => {
                 expect(endpoint).to.include.all.keys("route", "description");
             });
         })
