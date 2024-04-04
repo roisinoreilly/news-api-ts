@@ -26,10 +26,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const devData = __importStar(require("../data/development-data/index"));
-const index_js_1 = __importDefault(require("../index.js"));
-const seed_js_1 = __importDefault(require("./seed.js"));
-const runSeed = () => {
-    return (0, seed_js_1.default)(devData).then(() => index_js_1.default.end());
-};
-runSeed();
+const supertest_1 = __importDefault(require("supertest"));
+const chai_1 = require("chai");
+const testData = __importStar(require("../db/data/test-data/index"));
+const app_1 = __importDefault(require("../app"));
+const seed_1 = __importDefault(require("../db/seeds/seed"));
+const index_1 = __importDefault(require("../db/index"));
+const endpoints = require("../endpoints.json");
+beforeEach(() => (0, seed_1.default)(testData));
+after(() => index_1.default.end());
+describe("GET /", () => {
+    it("200: responds with an array endpoints", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get("/")
+            .expect(200)
+            .then((res) => {
+            const expectedLength = endpoints.length;
+            (0, chai_1.expect)(res.body.endpoints).to.have.lengthOf(expectedLength);
+            res.body.endpoints.forEach((endpoint) => {
+                (0, chai_1.expect)(endpoint).to.include.all.keys("route", "description");
+            });
+        });
+    });
+});

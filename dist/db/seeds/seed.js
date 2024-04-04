@@ -3,30 +3,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const connection_1 = __importDefault(require("../connection"));
+const __1 = __importDefault(require(".."));
 const pg_format_1 = __importDefault(require("pg-format"));
 const seed = (data) => {
     const { articleData, commentData, topicData, userData } = data;
-    return connection_1.default
+    return __1.default
         .query(`DROP TABLE IF EXISTS comments;`)
         .then(() => {
-        return connection_1.default.query(`DROP TABLE IF EXISTS articles;`);
+        return __1.default.query(`DROP TABLE IF EXISTS articles;`);
     })
         .then(() => {
-        return connection_1.default.query(`DROP TABLE IF EXISTS users;`);
+        return __1.default.query(`DROP TABLE IF EXISTS users;`);
     })
         .then(() => {
-        return connection_1.default.query(`DROP TABLE IF EXISTS topics;`);
+        return __1.default.query(`DROP TABLE IF EXISTS topics;`);
     })
         .then(() => {
-        return connection_1.default.query(`
+        return __1.default.query(`
                         CREATE TABLE topics(
                         slug VARCHAR PRIMARY KEY,
                         description VARCHAR);
                 `);
     })
         .then(() => {
-        return connection_1.default.query(`
+        return __1.default.query(`
                         CREATE TABLE users(
                         username VARCHAR PRIMARY KEY NOT NULL,
                         avatar_url VARCHAR,
@@ -34,7 +34,7 @@ const seed = (data) => {
                   `);
     })
         .then(() => {
-        return connection_1.default.query(`CREATE TABLE articles(
+        return __1.default.query(`CREATE TABLE articles(
                     article_id SERIAL PRIMARY KEY,
                     title VARCHAR NOT NULL,
                     body VARCHAR NOT NULL,
@@ -45,7 +45,7 @@ const seed = (data) => {
                   );`);
     })
         .then(() => {
-        return connection_1.default.query(`CREATE TABLE comments(
+        return __1.default.query(`CREATE TABLE comments(
                     comment_id SERIAL PRIMARY KEY,
                     author VARCHAR REFERENCES users(username) NOT NULL,
                     article_id INT REFERENCES articles(article_id) ON DELETE CASCADE NOT NULL,
@@ -59,7 +59,7 @@ const seed = (data) => {
                         VALUES %L;`, topicData.map((topics) => {
             return [topics["slug"], topics["description"]];
         }));
-        return connection_1.default.query(queryTopics);
+        return __1.default.query(queryTopics);
     })
         .then(() => {
         const queryUsers = (0, pg_format_1.default)(`
@@ -67,7 +67,7 @@ const seed = (data) => {
           VALUES %L;`, userData.map((user) => {
             return [user["username"], user["avatar_url"], user["name"]];
         }));
-        return connection_1.default.query(queryUsers);
+        return __1.default.query(queryUsers);
     })
         .then(() => {
         const queryArticles = (0, pg_format_1.default)(`
@@ -82,7 +82,7 @@ const seed = (data) => {
                 article["votes"],
             ];
         }));
-        return connection_1.default.query(queryArticles);
+        return __1.default.query(queryArticles);
     })
         .then(() => {
         const queryComments = (0, pg_format_1.default)(`
@@ -96,7 +96,7 @@ const seed = (data) => {
                 comment["created_at"],
             ];
         }));
-        return connection_1.default.query(queryComments);
+        return __1.default.query(queryComments);
     });
 };
 exports.default = seed;
