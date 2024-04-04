@@ -4,11 +4,11 @@
   "description": "bc-nc-news",
   "main": "index.js",
   "scripts": {
-      "start": "node dist/listen.js",
-      "setup-dbs": "psql -f ./src/db/setup.sql",
-      "seed": "tsc && node dist/db/seeds/run-seed.js",
-      "test": "ts-mocha --timeout 5000 ./src/**/*.spec.ts",
-      "seed-prod": "NODE_ENV=production npm run seed"
+    "start": "node dist/listen.js",
+    "setup-dbs": "psql -f ./src/db/setup.sql",
+    "seed": "tsc && node dist/db/seeds/run-seed.js",
+    "test": "ts-mocha --timeout 5000 ./src/**/*.spec.ts",
+    "seed-prod": "NODE_ENV=production npm run seed"
   },
   "repository": {
     "type": "git",
@@ -22,27 +22,38 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "dependencies": {
-      "dotenv": "^10.0.0",
-      "express": "^4.17.1",
-      "pg": "^8.7.1",
-      "pg-format": "^1.0.4",
-      "typescript": "^4.7.4"
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "pg": "^8.7.1",
+    "pg-format": "^1.0.4",
+    "typescript": "^4.7.4"
   },
   "devDependencies": {
-      "@types/chai": "^4.3.1",
-      "@types/express": "^4.17.13",
-      "@types/mocha": "^9.1.1",
-      "@types/node": "^17.0.41",
-      "@types/pg-format": "^1.0.2",
-      "@types/supertest": "^2.0.12",
-      "chai": "^4.3.6",
-      "supertest": "^6.1.6",
-      "ts-mocha": "^10.0.0",
-      "ts-node": "^10.8.1"
+    "@types/chai": "^4.3.1",
+    "@types/express": "^4.17.13",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.41",
+    "@types/pg-format": "^1.0.2",
+    "@types/supertest": "^2.0.12",
+    "chai": "^4.3.6",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "supertest": "^6.1.6",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.8.1",
+    "prettier": "3.2.5"
   },
   "jest": {
-      "setupFilesAfterEnv": [
-          "jest-sorted"
-      ]
+    "setupFilesAfterEnv": [
+      "jest-sorted"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": ["prettier --write", "git add"]
   }
 }
