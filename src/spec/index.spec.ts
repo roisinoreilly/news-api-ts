@@ -9,10 +9,10 @@ import endpoints = require("../endpoints.json")
 beforeEach(() => seed(testData));
 after(() => db.end());
 
-describe("GET /", () => {
+describe("GET /api", () => {
     it("200: responds with an array endpoints", () => {
         return request(app)
-        .get("/")
+        .get("/api")
         .expect(200)
         .then((res) => {
             const expectedLength = endpoints.length;
@@ -23,3 +23,17 @@ describe("GET /", () => {
         })
     })
     })
+
+describe("GET /api/topics", () => {
+    it("200: responds with an array of topics", () => {
+        return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then((res) => {
+            expect(res.body.topics.length).to.be.gte(1)
+            res.body.topics.forEach((topic: {}) => {
+                expect(topic).to.include.all.keys("slug", "description");
+            });
+        })
+    })
+})
