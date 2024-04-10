@@ -35,10 +35,10 @@ const index_1 = __importDefault(require("../db/index"));
 const endpoints = require("../endpoints.json");
 beforeEach(() => (0, seed_1.default)(testData));
 after(() => index_1.default.end());
-describe("GET /", () => {
+describe("GET /api", () => {
     it("200: responds with an array endpoints", () => {
         return (0, supertest_1.default)(app_1.default)
-            .get("/")
+            .get("/api")
             .expect(200)
             .then((res) => {
             const expectedLength = endpoints.length;
@@ -46,6 +46,29 @@ describe("GET /", () => {
             res.body.endpoints.forEach((endpoint) => {
                 (0, chai_1.expect)(endpoint).to.include.all.keys("route", "description");
             });
+        });
+    });
+});
+describe("GET /api/topics", () => {
+    it("200: responds with an array of topics", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get("/api/topics")
+            .expect(200)
+            .then((res) => {
+            (0, chai_1.expect)(res.body.topics.length).to.be.gte(1);
+            res.body.topics.forEach((topic) => {
+                (0, chai_1.expect)(topic).to.include.all.keys("slug", "description");
+            });
+        });
+    });
+});
+describe("GET /api/articles/:article_id", () => {
+    it("200: responds with an article", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get("/api/articles/1")
+            .expect(200)
+            .then((res) => {
+            (0, chai_1.expect)(res.body.article[0]).to.include.all.keys("article_id", "title", "body", "votes", "topic", "author", "created_at", "comment_count");
         });
     });
 });
