@@ -47,4 +47,20 @@ describe("GET /api/articles/:article_id", () => {
             expect(res.body.article[0]).to.include.all.keys("article_id", "title", "body", "votes", "topic", "author", "created_at", "comment_count");
         })
     })
+    it("404: responds with an error message when article_id is not found", () => {
+        return request(app)
+        .get("/api/articles/10000")
+        .expect(404)
+        .then((res) => {
+            expect(res.text).to.equal("Not found")
+        })
+    })
+    it("400: responds with an error message when article_id is invalid", () => {
+        return request(app)
+        .get("/api/articles/not-an-id")
+        .expect(400)
+        .then((res) => {
+            expect(res.body.msg).to.equal("Bad request")
+        })
+    })
 })

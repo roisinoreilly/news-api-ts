@@ -13,3 +13,9 @@ export type Article = {
     votes: number;
     comment_count: number;
 }
+
+export interface ResponseError extends Error {
+    status?: number;
+    code?: string;
+    msg?: string;
+  }
