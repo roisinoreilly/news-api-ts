@@ -7,13 +7,13 @@ import {
 import { Article } from "../types";
 
 export const getArticlesById = (
-  req: Request,
+  req: Request<{ article_id: string}>,
   res: Response,
   next: NextFunction
 ) => {
   const { article_id } = req.params;
   fetchArticleById(article_id)
-    .then((article: Article) => {
+    .then((article: Article[]) => {
       res.status(200).send({ article });
     })
     .catch(next);
@@ -31,8 +31,8 @@ export const getAllArticles = (
     .catch(next);
 };
 
-export const getCommentsById = (
-  req: Request,
+export const getCommentsByArticleId = (
+  req: Request<{ article_id: string}>,
   res: Response,
   next: NextFunction
 ) => {

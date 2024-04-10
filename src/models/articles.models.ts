@@ -1,7 +1,7 @@
 import db from "../db/index";
 import { Article } from "../types";
 
-export const fetchArticleById = (article_id: string) => {
+export const fetchArticleById = (article_id: string): Promise<Article[]> => {
   return db
     .query(
       `SELECT articles.*, COUNT(comments.article_id)::int AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;`,
@@ -15,7 +15,7 @@ export const fetchArticleById = (article_id: string) => {
     });
 };
 
-export const fetchAllArticles = () => {
+export const fetchAllArticles = (): Promise<Article[]> => {
   return db
     .query(
       `SELECT articles.*, COUNT(comments.article_id) AS comment_count
@@ -30,7 +30,7 @@ export const fetchAllArticles = () => {
     });
 };
 
-export const fetchCommentsById = (article_id: string) => {
+export const fetchCommentsById = (article_id: string): Promise<Comment[]> => {
   return db
     .query(
       `
