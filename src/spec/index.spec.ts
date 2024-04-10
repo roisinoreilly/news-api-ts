@@ -37,3 +37,14 @@ describe("GET /api/topics", () => {
         })
     })
 })
+
+describe("GET /api/articles/:article_id", () => {
+    it("200: responds with an article", () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((res) => {
+            expect(res.body.article[0]).to.include.all.keys("article_id", "title", "body", "votes", "topic", "author", "created_at", "comment_count");
+        })
+    })
+})
