@@ -2,7 +2,7 @@ import db from "..";
 import format from "pg-format";
 
 type SeedData = {
-  articleData: { 
+  articleData: {
     title: string;
     topic: string;
     author: string;

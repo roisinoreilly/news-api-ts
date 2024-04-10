@@ -1,4 +1,4 @@
-import express from "express"
+import express from "express";
 import { getAllTopics } from "../controllers/topics.controller";
 
 const topicsRouter = express.Router();
