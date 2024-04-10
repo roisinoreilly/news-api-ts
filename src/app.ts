@@ -12,6 +12,7 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 app.all("*", handleRouteErrors);
+
 app.use(handleCustomErrors);
 app.use(handlePSQLErrors);
 app.use(handleServerErrors);
