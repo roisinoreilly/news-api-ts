@@ -1,4 +1,4 @@
-import express from "express"
+import express from "express";
 import { getEndpoints } from "../controllers/endpoints.controller";
 import topicsRouter from "./topics.router";
 import articlesRouter from "./articles.router";
