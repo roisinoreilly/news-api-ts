@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import { fetchArticleById } from "../models/articles.models";
+import { fetchAllArticles, fetchArticleById } from "../models/articles.models";
 import { Article } from "../types";
 
 export const getArticlesById = (req: Request, res: Response, next: NextFunction) => {
@@ -7,6 +7,14 @@ export const getArticlesById = (req: Request, res: Response, next: NextFunction)
     fetchArticleById(article_id)
     .then((article: Article) => {
         res.status(200).send({article})
+    })
+    .catch(next)
+}
+
+export const getAllArticles = (req: Request, res: Response, next: NextFunction) => {
+    fetchAllArticles()
+    .then((articles: Article[]) => {
+        res.status(200).send({articles})
     })
     .catch(next)
 }

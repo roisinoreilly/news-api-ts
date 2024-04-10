@@ -1,10 +1,13 @@
 import request from "supertest";
 import { expect, assert } from "chai";
+const chai = require("chai");
+chai.use(require("chai-sorted"));
 import * as testData from "../db/data/test-data/index";
 import app from "../app";
 import seed from "../db/seeds/seed";
 import db from "../db/index";
 import endpoints = require("../endpoints.json")
+import { it } from "mocha";
 
 beforeEach(() => seed(testData));
 after(() => db.end());
@@ -64,3 +67,25 @@ describe("GET /api/articles/:article_id", () => {
         })
     })
 })
+
+describe('GET /api/articles', () => {
+    it('200: responds with an array of articles', () => {
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles.length).to.be.gte(1)
+            res.body.articles.forEach((article: {}) => {
+                expect(article).to.include.all.keys("article_id", "title", "body", "votes", "topic", "author", "created_at", "comment_count");
+            });
+        })
+    })
+    it('200: articles array is sorted by default date descending', () => {
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles).to.be.sortedBy("created_at", { descending: true })
+        })
+    })
+});
