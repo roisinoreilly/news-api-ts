@@ -2,9 +2,9 @@
   "name": "be-nc-news",
   "version": "1.0.0",
   "description": "bc-nc-news",
-  "main": "listen.js",
+  "main": "listen.ts",
   "scripts": {
-    "start": "node listen.js",
+    "start": "node listen.ts",
     "setup-dbs": "psql -f ./src/db/setup.sql",
     "seed": "tsc && node dist/db/seeds/run-seed.js",
     "test": "ts-mocha --timeout 5000 ./src/**/*.spec.ts",
