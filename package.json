@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "dependencies": {
+    "@types/chai-sorted": "^0.2.3",
     "@xata.io/client": "^0.29.4",
+    "chai-sorted": "^0.2.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "pg": "^8.7.1",
