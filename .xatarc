@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://roisinoreilly-s-workspace-t6c9sg.eu-west-1.xata.sh/db/roisin-oreilly-news-api",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
