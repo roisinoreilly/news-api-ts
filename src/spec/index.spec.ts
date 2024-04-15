@@ -26,7 +26,15 @@ describe("GET /api", () => {
         });
       });
   });
-});
+  it("404: responds with an error message if given an invalid route", () => {
+    return request(app)
+      .get("/invalid-route")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Not found");
+      });
+    });
+  });
 
 describe("GET /api/topics", () => {
   it("200: responds with an array of topics", () => {

@@ -6,7 +6,7 @@ export const handleRouteErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(404).send("Route not found");
+  res.status(404).send({msg: "Not found"});
 };
 
 export const handleCustomErrors = (
