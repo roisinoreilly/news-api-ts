@@ -8,7 +8,7 @@ import seed from "../db/seeds/seed";
 import db from "../db/index";
 import endpoints = require("../endpoints.json");
 import { it } from "mocha";
-import { Article, Topic } from "../types";
+import { Article, Topic, User } from "../types";
 
 beforeEach(() => seed(testData));
 after(() => db.end());
@@ -331,4 +331,21 @@ describe('DELETE /api/comments/:comment_id', () => {
       })
   })
 
+describe('GET /api/users', () => {
+  it("200: responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.users.length).to.be.gte(1);
+        res.body.users.forEach((user: User) => {
+          expect(user).to.include.all.keys(
+            "username",
+            "name",
+            "avatar_url"
+          );
+        });
+      });
+  })
+});
   
