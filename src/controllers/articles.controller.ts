@@ -9,7 +9,7 @@ import {
 import { Article } from "../types";
 
 export const getArticlesById = (
-  req: Request<{ article_id: string}>,
+  req: Request<{ article_id: string }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -34,7 +34,7 @@ export const getAllArticles = (
 };
 
 export const getCommentsByArticleId = (
-  req: Request<{ article_id: string}>,
+  req: Request<{ article_id: string }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -48,22 +48,22 @@ export const getCommentsByArticleId = (
 };
 
 export const postCommentByArticleId = (
-  req: Request<{ article_id: string}>,
+  req: Request<{ article_id: string }>,
   res: Response,
   next: NextFunction
 ) => {
   const { article_id } = req.params;
-  const {username, body} = req.body;
+  const { username, body } = req.body;
 
   insertCommentById(article_id, username, body)
-  .then((comment: Comment) => {
-    res.status(201).send({comment})
-  })
-  .catch(next);
-}
+    .then((comment: Comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
 
 export const patchArticleById = (
-  req: Request<{ article_id: string}>,
+  req: Request<{ article_id: string }>,
   res: Response,
   next: NextFunction
 ) => {

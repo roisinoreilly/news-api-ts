@@ -49,18 +49,17 @@ export const insertCommentById = (
   body: string
 ): Promise<Comment> => {
   if (!username || !body) {
-    return Promise.reject({status: 400, msg: "Bad request"});
-  }
-  else {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else {
     return db
-    .query(
-      `INSERT INTO comments (body, article_id, author) VALUES ($1, $2, $3) RETURNING *;`,
-      [body, article_id, username]
-    )
-    .then(({ rows }: { rows: Comment[] }) => {
-      return rows[0];
-    })
-  };
+      .query(
+        `INSERT INTO comments (body, article_id, author) VALUES ($1, $2, $3) RETURNING *;`,
+        [body, article_id, username]
+      )
+      .then(({ rows }: { rows: Comment[] }) => {
+        return rows[0];
+      });
+  }
 };
 
 export const updateArticleById = (
@@ -75,7 +74,6 @@ export const updateArticleById = (
     .then(({ rows }: { rows: Article[] }) => {
       if (rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
-      }
-      else return rows[0];
+      } else return rows[0];
     });
 };

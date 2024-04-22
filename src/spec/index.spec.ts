@@ -199,8 +199,8 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then((res) => {
         expect(res.body.comment).to.not.have.property("extraProperty");
-      })
-  })
+      });
+  });
   it("404: responds with an appropriate message when given a valid but non-existent id", () => {
     const testComment = {
       username: "butter_bridge",
@@ -228,7 +228,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
   it("400: responds with an error message when given an empty request body", () => {
-    const testComment = { username: "butter_bridge"};
+    const testComment = { username: "butter_bridge" };
     return request(app)
       .post("/api/articles/1/comments")
       .send(testComment)
@@ -238,7 +238,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
   it("404: responds with an error message when username is not in the database", () => {
-    const testComment = { username: "not-in-db", body: "test comment"};
+    const testComment = { username: "not-in-db", body: "test comment" };
     return request(app)
       .post("/api/articles/1/comments")
       .send(testComment)
@@ -249,11 +249,11 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe('PATCH /api/articles/:article_id', () => {
+describe("PATCH /api/articles/:article_id", () => {
   it("200: responds with the patched article", () => {
     const testVote = {
-      inc_votes: 1
-    }
+      inc_votes: 1,
+    };
     return request(app)
       .patch("/api/articles/1")
       .send(testVote)
@@ -266,15 +266,15 @@ describe('PATCH /api/articles/:article_id', () => {
           "votes",
           "topic",
           "author",
-          "created_at",
+          "created_at"
         );
         expect(res.body.article.votes).to.eql(101);
       });
-  })
+  });
   it("404: responds with an appropriate message when given a valid but non-existent id", () => {
     const testVote = {
-      inc_votes: 1
-    }
+      inc_votes: 1,
+    };
     return request(app)
       .patch("/api/articles/999999")
       .send(testVote)
@@ -282,11 +282,11 @@ describe('PATCH /api/articles/:article_id', () => {
       .then((res) => {
         expect(res.body.msg).to.equal("Not found");
       });
-  })
+  });
   it("400: responds with an appropriate message when given an invalid id", () => {
     const testVote = {
-      inc_votes: 1
-    }
+      inc_votes: 1,
+    };
     return request(app)
       .patch("/api/articles/not-an-id")
       .send(testVote)
@@ -294,9 +294,9 @@ describe('PATCH /api/articles/:article_id', () => {
       .then((res) => {
         expect(res.body.msg).to.equal("Bad request");
       });
-  })
+  });
   it("400: responds with an error message when inc_votes is not a number", () => {
-    const testVote = { inc_votes: "not-a-number"};
+    const testVote = { inc_votes: "not-a-number" };
     return request(app)
       .patch("/api/articles/1")
       .send(testVote)
@@ -304,34 +304,32 @@ describe('PATCH /api/articles/:article_id', () => {
       .then((res) => {
         expect(res.body.msg).to.equal("Bad request");
       });
-  })
+  });
 });
 
-describe('DELETE /api/comments/:comment_id', () => {
+describe("DELETE /api/comments/:comment_id", () => {
   it("204: responds with no content", () => {
-    return request(app)
-      .delete("/api/comments/1")
-      .expect(204)
-  })
+    return request(app).delete("/api/comments/1").expect(204);
+  });
   it("404: responds with an appropriate message when given a valid but non-existent id", () => {
     return request(app)
       .delete("/api/comments/999999")
       .expect(404)
       .then((res) => {
         expect(res.body.msg).to.equal("Not found");
-        })
-      })
-  })
-  it("400: responds with an appropriate message when given an invalid id", () => {
-    return request(app)
-      .delete("/api/comments/not-an-id")
-      .expect(400)
-      .then((res) => {
-        expect(res.body.msg).to.equal("Bad request");
-      })
-  })
+      });
+  });
+});
+it("400: responds with an appropriate message when given an invalid id", () => {
+  return request(app)
+    .delete("/api/comments/not-an-id")
+    .expect(400)
+    .then((res) => {
+      expect(res.body.msg).to.equal("Bad request");
+    });
+});
 
-describe('GET /api/users', () => {
+describe("GET /api/users", () => {
   it("200: responds with an array of users", () => {
     return request(app)
       .get("/api/users")
@@ -339,13 +337,8 @@ describe('GET /api/users', () => {
       .then((res) => {
         expect(res.body.users.length).to.be.gte(1);
         res.body.users.forEach((user: User) => {
-          expect(user).to.include.all.keys(
-            "username",
-            "name",
-            "avatar_url"
-          );
+          expect(user).to.include.all.keys("username", "name", "avatar_url");
         });
       });
-  })
+  });
 });
-  

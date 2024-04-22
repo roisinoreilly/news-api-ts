@@ -6,7 +6,7 @@ export const handleRouteErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(404).send({msg: "Not found"});
+  res.status(404).send({ msg: "Not found" });
 };
 
 export const handleCustomErrors = (
@@ -16,12 +16,10 @@ export const handleCustomErrors = (
   next: NextFunction
 ) => {
   if (err.status === 404) {
-    res.status(404).send({msg: "Not found"});
-  } 
-  else if (err.status === 400) {
-    res.status(400).send({msg: "Bad request"});
-  }
-  else next(err);
+    res.status(404).send({ msg: "Not found" });
+  } else if (err.status === 400) {
+    res.status(400).send({ msg: "Bad request" });
+  } else next(err);
 };
 
 export const handlePSQLErrors = (
@@ -32,11 +30,9 @@ export const handlePSQLErrors = (
 ) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad request" });
-  } 
-  else if (err.code === "23503") {
-    res.status(404).send({msg: "Not found"})
-  }
-  else {
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "Not found" });
+  } else {
     next(err);
   }
 };
