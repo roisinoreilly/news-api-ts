@@ -3,6 +3,7 @@ import {
   fetchAllArticles,
   fetchArticleById,
   fetchCommentsById,
+  insertCommentById,
 } from "../models/articles.models";
 import { Article } from "../types";
 
@@ -44,3 +45,18 @@ export const getCommentsByArticleId = (
     })
     .catch(next);
 };
+
+export const postCommentByArticleId = (
+  req: Request<{ article_id: string}>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { article_id } = req.params;
+  const {username, body} = req.body;
+
+  insertCommentById(article_id, username, body)
+  .then((comment: Comment) => {
+    res.status(201).send({comment})
+  })
+  .catch(next);
+}

@@ -42,3 +42,23 @@ export const fetchCommentsById = (article_id: string): Promise<Comment[]> => {
       return rows;
     });
 };
+
+export const insertCommentById = (
+  article_id: string,
+  username: string,
+  body: string
+): Promise<Comment> => {
+  if (!username || !body) {
+    return Promise.reject({status: 400, msg: "Bad request"});
+  }
+  else {
+    return db
+    .query(
+      `INSERT INTO comments (body, article_id, author) VALUES ($1, $2, $3) RETURNING *;`,
+      [body, article_id, username]
+    )
+    .then(({ rows }: { rows: Comment[] }) => {
+      return rows[0];
+    })
+  }
+};
