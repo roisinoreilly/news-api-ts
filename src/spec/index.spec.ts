@@ -33,8 +33,8 @@ describe("GET /api", () => {
       .then((res) => {
         expect(res.body.msg).to.equal("Not found");
       });
-    });
   });
+});
 
 describe("GET /api/topics", () => {
   it("200: responds with an array of topics", () => {
@@ -73,7 +73,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/10000")
       .expect(404)
       .then((res) => {
-        expect(res.text).to.equal("Not found");
+        expect(res.body.msg).to.equal("Not found");
       });
   });
   it("400: responds with an error message when article_id is invalid", () => {
@@ -150,7 +150,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/10000/comments")
       .expect(404)
       .then((res) => {
-        expect(res.text).to.equal("Not found");
+        expect(res.body.msg).to.equal("Not found");
       });
   });
   it("400: invalid article id", () => {
@@ -159,6 +159,92 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).to.equal("Bad request");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("201: responds with a posted comment for a valid article", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "test comment body",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.comment).to.include.all.keys(
+          "article_id",
+          "author",
+          "body",
+          "comment_id",
+          "created_at",
+          "votes"
+        );
+        expect(res.body.comment.article_id).to.eql(1);
+        expect(res.body.comment.author).to.eql(testComment.username);
+        expect(res.body.comment.body).to.eql(testComment.body);
+      });
+  });
+  it("200: ignores any unnecessary properties on the comment body", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "test comment body",
+      extraProperty: "extra property",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.comment).to.not.have.property("extraProperty");
+      })
+  })
+  it("404: responds with an appropriate message when given a valid but non-existent id", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "test comment body",
+    };
+    return request(app)
+      .post("/api/articles/999999/comments")
+      .send(testComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Not found");
+      });
+  });
+  it("400: responds with an appropriate message when given an invalid id", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "test comment body",
+    };
+    return request(app)
+      .post("/api/articles/not-an-id/comments")
+      .send(testComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Bad request");
+      });
+  });
+  it("400: responds with an error message when given an empty request body", () => {
+    const testComment = { username: "butter_bridge"};
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Bad request");
+      });
+  });
+  it("404: responds with an error message when username is not in the database", () => {
+    const testComment = { username: "not-in-db", body: "test comment"};
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Not found");
       });
   });
 });
