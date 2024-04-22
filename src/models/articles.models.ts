@@ -60,5 +60,22 @@ export const insertCommentById = (
     .then(({ rows }: { rows: Comment[] }) => {
       return rows[0];
     })
-  }
+  };
+};
+
+export const updateArticleById = (
+  article_id: string,
+  inc_votes: number
+): Promise<Article> => {
+  return db
+    .query(
+      `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`,
+      [inc_votes, article_id]
+    )
+    .then(({ rows }: { rows: Article[] }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      else return rows[0];
+    });
 };

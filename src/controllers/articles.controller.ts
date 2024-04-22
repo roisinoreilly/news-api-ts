@@ -4,6 +4,7 @@ import {
   fetchArticleById,
   fetchCommentsById,
   insertCommentById,
+  updateArticleById,
 } from "../models/articles.models";
 import { Article } from "../types";
 
@@ -60,3 +61,20 @@ export const postCommentByArticleId = (
   })
   .catch(next);
 }
+
+export const patchArticleById = (
+  req: Request<{ article_id: string}>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+  if (!inc_votes) {
+    res.status(400).send({ msg: "Bad request" });
+  }
+  updateArticleById(article_id, inc_votes)
+    .then((article: Article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+};

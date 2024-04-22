@@ -248,3 +248,61 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe('PATCH /api/articles/:article_id', () => {
+  it("200: responds with the patched article", () => {
+    const testVote = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch("/api/articles/1")
+      .send(testVote)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article).to.include.all.keys(
+          "article_id",
+          "title",
+          "body",
+          "votes",
+          "topic",
+          "author",
+          "created_at",
+        );
+        expect(res.body.article.votes).to.eql(101);
+      });
+  })
+  it("404: responds with an appropriate message when given a valid but non-existent id", () => {
+    const testVote = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch("/api/articles/999999")
+      .send(testVote)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Not found");
+      });
+  })
+  it("400: responds with an appropriate message when given an invalid id", () => {
+    const testVote = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch("/api/articles/not-an-id")
+      .send(testVote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Bad request");
+      });
+  })
+  it("400: responds with an error message when inc_votes is not a number", () => {
+    const testVote = { inc_votes: "not-a-number"};
+    return request(app)
+      .patch("/api/articles/1")
+      .send(testVote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Bad request");
+      });
+  })
+});
