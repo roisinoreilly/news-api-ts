@@ -306,3 +306,29 @@ describe('PATCH /api/articles/:article_id', () => {
       });
   })
 });
+
+describe('DELETE /api/comments/:comment_id', () => {
+  it("204: responds with no content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+  })
+  it("404: responds with an appropriate message when given a valid but non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Not found");
+        })
+      })
+  })
+  it("400: responds with an appropriate message when given an invalid id", () => {
+    return request(app)
+      .delete("/api/comments/not-an-id")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).to.equal("Bad request");
+      })
+  })
+
+  
