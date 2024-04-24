@@ -1,5 +1,20 @@
 import db from "../db/index";
-import { Article } from "../types";
+import { z } from "zod";
+
+const ArticleSchema = z.object({
+  article_id: z.number(),
+  title: z.string(),
+  topic: z.string(),
+  author: z.string(),
+  body: z.string(),
+  created_at: z.string(),
+  votes: z.number(),
+  comment_count: z.number(),
+});
+
+export type Article = z.infer<typeof ArticleSchema>;
+
+const ArticlesArraySchema = z.array(ArticleSchema);
 
 export const fetchArticleById = (article_id: string): Promise<Article[]> => {
   return db
@@ -8,10 +23,16 @@ export const fetchArticleById = (article_id: string): Promise<Article[]> => {
       [article_id]
     )
     .then(({ rows }: { rows: Article[] }) => {
-      if (rows.length === 0) {
+      if (!rows || rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      return rows;
+      const validation = ArticlesArraySchema.safeParse(rows);
+      if (!validation.success) {
+        return validation.error;
+      }
+      if (validation.success) {
+        return rows;
+      }
     });
 };
 

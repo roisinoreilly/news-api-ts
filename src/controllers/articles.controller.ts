@@ -6,7 +6,7 @@ import {
   insertCommentById,
   updateArticleById,
 } from "../models/articles.models";
-import { Article } from "../types";
+import { Article } from "../models/articles.models";
 
 export const getArticlesById = (
   req: Request<{ article_id: string }>,
