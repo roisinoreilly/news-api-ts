@@ -1,5 +1,5 @@
 import db from "../db/index";
-import { Comment } from "../types";
+import { Comment } from "../schemas/comments.schemas";
 
 export const deleteCommentById = (comment_id: string): Promise<Comment> => {
   return db
