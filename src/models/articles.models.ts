@@ -1,34 +1,45 @@
 import db from "../db/index";
-import { z } from "zod";
-
-const ArticleSchema = z.object({
-  article_id: z.number(),
-  title: z.string(),
-  topic: z.string(),
-  author: z.string(),
-  body: z.string(),
-  created_at: z.string(),
-  votes: z.number(),
-  comment_count: z.number(),
-});
-
-export type Article = z.infer<typeof ArticleSchema>;
-
-const ArticlesArraySchema = z.array(ArticleSchema);
+import {
+  ArticlesArraySchema,
+  Article,
+  ArticleSchema,
+} from "../schemas/articles.schemas";
+import {
+  CommentsArraySchema,
+  Comment,
+  CommentSchema,
+} from "../schemas/comments.schemas";
 
 export const fetchArticleById = (article_id: string): Promise<Article[]> => {
   return db
     .query(
-      `SELECT articles.*, COUNT(comments.article_id)::int AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;`,
+      `SELECT 
+      articles.article_id, 
+      articles.title, 
+      articles.topic, 
+      articles.author, 
+      articles.body, 
+      articles.created_at, 
+      COALESCE(articles.votes, 0) AS votes, 
+      COUNT(comments.article_id)::int AS comment_count 
+  FROM 
+      articles 
+  LEFT JOIN 
+      comments ON articles.article_id = comments.article_id 
+  WHERE 
+      articles.article_id = $1 
+  GROUP BY 
+      articles.article_id;
+  `,
       [article_id]
     )
     .then(({ rows }: { rows: Article[] }) => {
       if (!rows || rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      const validation = ArticlesArraySchema.safeParse(rows);
+      const validation = ArticleSchema.safeParse(rows[0]);
       if (!validation.success) {
-        return validation.error;
+        throw new Error("Validation failed");
       }
       if (validation.success) {
         return rows;
@@ -39,28 +50,49 @@ export const fetchArticleById = (article_id: string): Promise<Article[]> => {
 export const fetchAllArticles = (): Promise<Article[]> => {
   return db
     .query(
-      `SELECT articles.*, COUNT(comments.article_id) AS comment_count
-    FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;
+      `SELECT 
+      articles.article_id, 
+      articles.title, 
+      articles.topic, 
+      articles.author, 
+      articles.created_at, 
+      COALESCE(articles.votes, 0) AS votes,
+      COUNT(comments.article_id) AS comment_count
+  FROM 
+      articles
+  LEFT JOIN 
+      comments ON articles.article_id = comments.article_id
+  GROUP BY 
+      articles.article_id
+  ORDER BY 
+      articles.created_at DESC;
     `
     )
     .then(({ rows }: { rows: Article[] }) => {
-      return rows;
+      if (!rows || rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      const validation = ArticlesArraySchema.safeParse(rows);
+      if (!validation.success) {
+        throw new Error("Validation failed");
+      }
+      if (validation.success) {
+        return rows;
+      }
     });
 };
 
 export const fetchCommentsById = (article_id: string): Promise<Comment[]> => {
   return db
-    .query(
-      `
-    SELECT * FROM comments WHERE article_id = $1;
-    `,
-      [article_id]
-    )
+    .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
     .then(({ rows }: { rows: Comment[] }) => {
-      return rows;
+      const validation = CommentsArraySchema.safeParse(rows);
+      if (!validation.success) {
+        throw new Error("Validation failed");
+      }
+      if (validation.success) {
+        return rows;
+      }
     });
 };
 
@@ -78,7 +110,13 @@ export const insertCommentById = (
         [body, article_id, username]
       )
       .then(({ rows }: { rows: Comment[] }) => {
-        return rows[0];
+        const validation = CommentSchema.safeParse(rows[0]);
+        if (!validation.success) {
+          throw new Error("Validation failed");
+        }
+        if (validation.success) {
+          return rows[0];
+        }
       });
   }
 };
@@ -95,6 +133,13 @@ export const updateArticleById = (
     .then(({ rows }: { rows: Article[] }) => {
       if (rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
-      } else return rows[0];
+      }
+      const validation = CommentSchema.safeParse(rows[0]);
+      if (!validation.success) {
+        throw new Error("Validation failed");
+      }
+      if (validation.success) {
+        return rows[0];
+      }
     });
 };
