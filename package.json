@@ -4,7 +4,7 @@
   "description": "bc-nc-news",
   "main": "./dist/listen.js",
   "scripts": {
-    "start": "node ./dist/listen.js",
+    "start": "tsc && node ./dist/listen.js",
     "setup-dbs": "psql -f ./src/db/setup.sql",
     "seed": "tsc && node dist/db/seeds/run-seed.js",
     "test": "ts-mocha --timeout 5000 ./src/**/*.spec.ts",
@@ -35,8 +35,9 @@
   "devDependencies": {
     "@types/chai": "^4.3.1",
     "@types/express": "^4.17.13",
+    "@types/jest": "^29.5.12",
     "@types/mocha": "^9.1.1",
-    "@types/node": "^17.0.41",
+    "@types/node": "^17.0.45",
     "@types/pg-format": "^1.0.2",
     "@types/supertest": "^2.0.12",
     "chai": "^4.3.6",
