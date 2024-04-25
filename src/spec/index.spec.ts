@@ -8,7 +8,8 @@ import seed from "../db/seeds/seed";
 import db from "../db/index";
 import endpoints = require("../endpoints.json");
 import { it } from "mocha";
-import { Article, Topic, User } from "../types";
+import { Topic, User } from "../types";
+import { Article } from "../schemas/articles.schemas";
 
 beforeEach(() => seed(testData));
 after(() => db.end());
@@ -97,13 +98,23 @@ describe("GET /api/articles", () => {
           expect(article).to.include.all.keys(
             "article_id",
             "title",
-            "body",
             "votes",
             "topic",
             "author",
             "created_at",
             "comment_count"
           );
+        });
+      });
+  });
+  it("200: articles do not contain the key of body", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles.length).to.be.gte(1);
+        res.body.articles.forEach((article: Article) => {
+          expect(article).to.not.include.keys("body");
         });
       });
   });
