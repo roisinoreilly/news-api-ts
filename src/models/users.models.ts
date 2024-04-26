@@ -10,7 +10,7 @@ export const fetchAllUsers = (): Promise<User[]> => {
     if (!validation.success) {
       throw new Error("Validation failed");
     }
-    if (validation.success) {
+    else {
       return rows;
     }
   });
