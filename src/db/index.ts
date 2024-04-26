@@ -1,7 +1,9 @@
-const { Pool } = require("pg");
+import { Pool } from "pg";
+import dotenv from "dotenv";
+
 const ENV = process.env.NODE_ENV || "dev";
 
-require("dotenv").config({
+dotenv.config({
   path: `${__dirname}/../../.env.${ENV}`,
 });
 

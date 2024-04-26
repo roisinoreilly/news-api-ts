@@ -41,7 +41,7 @@ export const fetchArticleById = (article_id: string): Promise<Article[]> => {
       if (!validation.success) {
         throw new Error("Validation failed");
       }
-      if (validation.success) {
+      else {
         return rows;
       }
     });
@@ -76,7 +76,7 @@ export const fetchAllArticles = (): Promise<Article[]> => {
       if (!validation.success) {
         throw new Error("Validation failed");
       }
-      if (validation.success) {
+      else {
         return rows;
       }
     });
@@ -90,7 +90,7 @@ export const fetchCommentsById = (article_id: string): Promise<Comment[]> => {
       if (!validation.success) {
         throw new Error("Validation failed");
       }
-      if (validation.success) {
+      else {
         return rows;
       }
     });
@@ -114,7 +114,7 @@ export const insertCommentById = (
         if (!validation.success) {
           throw new Error("Validation failed");
         }
-        if (validation.success) {
+        else {
           return rows[0];
         }
       });
@@ -138,7 +138,7 @@ export const updateArticleById = (
       if (!validation.success) {
         throw new Error("Validation failed");
       }
-      if (validation.success) {
+      else {
         return rows[0];
       }
     });

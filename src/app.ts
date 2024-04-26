@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import apiRouter from "./routers/api.router";
 import {
   handleCustomErrors,

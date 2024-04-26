@@ -1,7 +1,8 @@
 import request from "supertest";
-import { expect, assert } from "chai";
-const chai = require("chai");
-chai.use(require("chai-sorted"));
+import { expect } from "chai";
+import chai from "chai"
+import chaiSorted from "chai-sorted"
+chai.use(chaiSorted);
 import * as testData from "../db/data/test-data/index";
 import app from "../app";
 import seed from "../db/seeds/seed";
@@ -22,7 +23,7 @@ describe("GET /api", () => {
       .then((res) => {
         const expectedLength = endpoints.length;
         expect(res.body.endpoints).to.have.lengthOf(expectedLength);
-        res.body.endpoints.forEach((endpoint: {}) => {
+        res.body.endpoints.forEach((endpoint: unknown) => {
           expect(endpoint).to.include.all.keys("route", "description");
         });
       });
